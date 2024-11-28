@@ -1,7 +1,8 @@
 package com.project.todolist.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,41 +18,73 @@ public class Task {
     private int id;
 
     private String title;
-    private Date created_at;
-    private Date updated_at;
-    private String desc;
-    
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    private String formattedCreatedAt;
+    private String formattedUpdatedAt;
+
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
-    public Date getCreated_at() {
-        return created_at;
-    }
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-    public Date getUpdated_at() {
-        return updated_at;
-    }
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
-    }
-    public String getDesc() {
-        return desc;
-    }
-    public void setDesc(String desc) {
-        this.desc = desc;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFormattedCreatedAt() {
+        return formattedCreatedAt;
+    }
+
+    public void setFormattedCreatedAt(String formattedCreatedAt) {
+        this.formattedCreatedAt = formattedCreatedAt;
+    }
+
+    public String getFormattedUpdatedAt() {
+        return formattedUpdatedAt;
+    }
+
+    public void setFormattedUpdatedAt(String formattedUpdatedAt) {
+        this.formattedUpdatedAt = formattedUpdatedAt;
+    }
 
 }
