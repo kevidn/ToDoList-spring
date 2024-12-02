@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ToDo List</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .hidden {
+        display: none;
+      }
+
+      .relative {
+        position: relative;
+      }
+
+      .absolute {
+        position: absolute;
+      }
+
+      .z-10 {
+        z-index: 10;
+      }
+    </style>
   </head>
   <body class="bg-gray-50 text-gray-800 font-sans">
     <div class="container mx-auto p-6">
@@ -43,6 +60,7 @@
             <th class="px-4 py-2 text-left text-sm font-medium">Description</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Created At</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Updated At</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Status</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Actions</th>
           </tr>
         </thead>
@@ -53,6 +71,7 @@
             <td class="px-4 py-2 text-sm" th:text="${task.description}"></td>
             <td class="px-4 py-2 text-sm" th:text="${task.createdAt}"></td>
             <td class="px-4 py-2 text-sm" th:text="${task.updatedAt}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.status}"></td>
 
             <td class="px-4 py-2 text-sm">
               <div class="flex gap-2">
@@ -70,11 +89,10 @@
                   />
                 </a>
 
-                <!--Delete Button-->
                 <form
                   th:action="@{'/task/' + ${task.id}}"
                   method="POST"
-                  onsubmit="return confirmDelete(event)"
+                  onclick="return window.confirm('Are you sure want to delete this task?');"
                 >
                   <input type="hidden" name="_method" value="DELETE" />
                   <button
@@ -98,14 +116,4 @@
       </table>
     </div>
   </body>
-
-  <script>
-    function confirmDelete(event) {
-      const taskTitle = event.target
-        .closest("tr")
-        .querySelector("td:nth-child(2)").textContent;
-      const confirmMessage = `Are you sure you want to delete the task: "${taskTitle}"?`;
-      return confirm(confirmMessage);
-    }
-  </script>
 </html>

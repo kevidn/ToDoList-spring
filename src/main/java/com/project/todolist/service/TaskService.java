@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.project.todolist.repository.Repository;
 import com.project.todolist.models.Task;
+import com.project.todolist.models.Task.TaskStatus;
 
 @Service
 public class TaskService {
@@ -36,6 +40,7 @@ public class TaskService {
             taskMap.put("description", task.getDescription());
             taskMap.put("createdAt", task.getCreatedAt().format(formatter));
             taskMap.put("updatedAt", task.getUpdatedAt().format(formatter));
+            taskMap.put("status", task.getStatus().name());
             return taskMap;
         }).toList();
     }
@@ -45,6 +50,8 @@ public class TaskService {
     }
 
     public Task createAllTask(Task task) {
+        task.setCreatedAt(LocalDateTime.now());
+        task.setUpdatedAt(LocalDateTime.now());
         return repository.save(task);
     }
 
@@ -57,6 +64,7 @@ public class TaskService {
             existingTask.setTitle(updatedTask.getTitle());
             existingTask.setDescription(updatedTask.getDescription());
             existingTask.setUpdatedAt(LocalDateTime.now());
+            existingTask.setStatus(updatedTask.getStatus());
 
             return repository.save(existingTask);
         } else {
@@ -65,12 +73,13 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
-        Task task = repository.findById(id).orElse(null);
-        if (task == null) {
-            throw new RuntimeException("Task with id : '" + id + "' not found.");
-        }
+        Optional<Task> task = repository.findById(id);
 
-        repository.delete(task);
+        if (task.isPresent()) {
+            repository.delete(task.get());
+        } else {
+            throw new RuntimeException("Task not found with id " + id);
+        }
     }
 
 }

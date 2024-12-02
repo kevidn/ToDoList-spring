@@ -2,6 +2,8 @@ package com.project.todolist.controller;
 
 import com.project.todolist.service.TaskService;
 import com.project.todolist.models.Task;
+import com.project.todolist.models.Task.TaskStatus;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class TaskController {
     @GetMapping
     public String getAllTasks(Model model) {
         model.addAttribute("tasks", taskService.getAllTask());
-        return "task/index"; // Returns index.html
+        return "task/index";
     }
 
     @GetMapping("/create")
@@ -51,8 +53,7 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     public String deleteTask(@PathVariable Long id) {
-        // Logika penghapusan task
         taskService.deleteTask(id);
-        return "redirect:/task/list"; // Redirect ke halaman daftar task setelah dihapus
+        return "redirect:/task";
     }
 }
