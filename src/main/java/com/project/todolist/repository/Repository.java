@@ -12,7 +12,7 @@ public interface Repository extends JpaRepository<Task, Integer> {
 
     Optional<Task> findById(Long id);
 
-    void deleteById(Long id);
+    Task deleteById(Long id);
 
     List<Task> findAll(Sort sort);
 

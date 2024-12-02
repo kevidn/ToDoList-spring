@@ -51,14 +51,8 @@
             <td class="px-4 py-2 text-sm" th:text="${task.id}"></td>
             <td class="px-4 py-2 text-sm" th:text="${task.title}"></td>
             <td class="px-4 py-2 text-sm" th:text="${task.description}"></td>
-            <td
-              class="px-4 py-2 text-sm"
-              th:text="${task.formattedCreatedAt}"
-            ></td>
-            <td
-              class="px-4 py-2 text-sm"
-              th:text="${task.formattedUpdatedAt}"
-            ></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.createdAt}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.updatedAt}"></td>
 
             <td class="px-4 py-2 text-sm">
               <div class="flex gap-2">
@@ -76,10 +70,11 @@
                   />
                 </a>
 
+                <!--Delete Button-->
                 <form
                   th:action="@{'/task/' + ${task.id}}"
                   method="POST"
-                  class="inline"
+                  onsubmit="return confirmDelete(event)"
                 >
                   <input type="hidden" name="_method" value="DELETE" />
                   <button
@@ -91,8 +86,8 @@
                       class="ml-3"
                       width="15"
                       height="15"
-                      src="https://img.icons8.com/material-rounded/50/FFFFFF/filled-trash.png"
-                      alt="filled-trash"
+                      src="https://img.icons8.com/ios-filled/50/FFFFFF/delete.png"
+                      alt="delete"
                     />
                   </button>
                 </form>
@@ -103,4 +98,14 @@
       </table>
     </div>
   </body>
+
+  <script>
+    function confirmDelete(event) {
+      const taskTitle = event.target
+        .closest("tr")
+        .querySelector("td:nth-child(2)").textContent;
+      const confirmMessage = `Are you sure you want to delete the task: "${taskTitle}"?`;
+      return confirm(confirmMessage);
+    }
+  </script>
 </html>

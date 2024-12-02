@@ -28,9 +28,6 @@ public class Task {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    private String formattedCreatedAt;
-    private String formattedUpdatedAt;
-
     public int getId() {
         return id;
     }
@@ -69,22 +66,6 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getFormattedCreatedAt() {
-        return formattedCreatedAt;
-    }
-
-    public void setFormattedCreatedAt(String formattedCreatedAt) {
-        this.formattedCreatedAt = formattedCreatedAt;
-    }
-
-    public String getFormattedUpdatedAt() {
-        return formattedUpdatedAt;
-    }
-
-    public void setFormattedUpdatedAt(String formattedUpdatedAt) {
-        this.formattedUpdatedAt = formattedUpdatedAt;
     }
 
 }
