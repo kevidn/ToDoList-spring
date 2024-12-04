@@ -7,14 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import com.project.todolist.repository.Repository;
 import com.project.todolist.models.Task;
-import com.project.todolist.models.Task.TaskStatus;
+import com.project.todolist.repository.Repository;
 
 @Service
 public class TaskService {
@@ -44,7 +40,9 @@ public class TaskService {
             return taskMap;
         }).toList();
     }
-
+    public void save(Task task) {
+        repository.save(task);  // Pastikan taskRepository digunakan untuk menyimpan task
+    }
     public Optional<Task> getTaskById(Long id) {
         return repository.findById(id);
     }
