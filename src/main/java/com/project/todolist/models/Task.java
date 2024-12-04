@@ -1,8 +1,11 @@
 package com.project.todolist.models;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,41 +20,71 @@ public class Task {
     private int id;
 
     private String title;
-    private Date created_at;
-    private Date updated_at;
-    private String desc;
-    
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
+
+    public enum TaskStatus {
+        NOT_STARTED,
+        IN_PROGRESS,
+        COMPLETED
+    }
+
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
-    public Date getCreated_at() {
-        return created_at;
-    }
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-    public Date getUpdated_at() {
-        return updated_at;
-    }
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
-    }
-    public String getDesc() {
-        return desc;
-    }
-    public void setDesc(String desc) {
-        this.desc = desc;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
 
 }

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .hidden {
+        display: none;
+      }
+
+      .relative {
+        position: relative;
+      }
+
+      .absolute {
+        position: absolute;
+      }
+
+      .z-10 {
+        z-index: 10;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans">
+    <div class="container mx-auto p-6">
+      <h1 class="text-3xl font-semibold mb-6 flex items-center">
+        <img
+          class="ml-3"
+          width="50"
+          height="50"
+          src="https://img.icons8.com/ios-filled/50/task.png"
+          alt="task"
+        />
+        To-do list Website
+      </h1>
+
+      <a
+        href="/task/create"
+        class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mb-4 inline-flex items-center"
+      >
+        Add New Task
+        <img
+          class="ml-2"
+          width="30"
+          height="30"
+          src="https://img.icons8.com/ios/50/FFFFFF/create-new.png"
+          alt="create-new"
+        />
+      </a>
+
+      <table
+        class="min-w-full bg-white border border-gray-200 rounded shadow-md"
+      >
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium">ID</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Title</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Description</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Created At</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Updated At</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Status</th>
+            <th class="px-4 py-2 text-left text-sm font-medium">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="task : ${tasks}" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2 text-sm" th:text="${task.id}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.title}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.description}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.createdAt}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.updatedAt}"></td>
+            <td class="px-4 py-2 text-sm" th:text="${task.status}"></td>
+
+            <td class="px-4 py-2 text-sm">
+              <div class="flex gap-2">
+                <a
+                  th:href="@{'/task/' + ${task.id} + '/edit'}"
+                  class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 flex inline-flex items-center"
+                >
+                  Edit
+                  <img
+                    class="ml-3"
+                    width="15"
+                    height="15"
+                    src="https://img.icons8.com/ios-glyphs/30/FFFFFF/edit--v1.png"
+                    alt="edit--v1"
+                  />
+                </a>
+
+                <form
+                  th:action="@{'/task/' + ${task.id}}"
+                  method="POST"
+                  onclick="return window.confirm('Are you sure want to delete this task?');"
+                >
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button
+                    type="submit"
+                    class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex inline-flex items-center"
+                  >
+                    Delete
+                    <img
+                      class="ml-3"
+                      width="15"
+                      height="15"
+                      src="https://img.icons8.com/ios-filled/50/FFFFFF/delete.png"
+                      alt="delete"
+                    />
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
