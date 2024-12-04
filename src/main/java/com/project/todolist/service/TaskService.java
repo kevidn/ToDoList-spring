@@ -68,8 +68,6 @@ public class TaskService {
         } else {
             throw new RuntimeException("Task not found with id " + id);
         }
-        
-       
     }
 
     public void deleteTask(Long id) {
