@@ -56,4 +56,15 @@ public class TaskController {
         taskService.deleteTask(id);
         return "redirect:/task";
     }
+
+    @PostMapping("/update-status")
+    public String updateStatus(@RequestParam Long taskId, @RequestParam String status) {
+        Task task = taskService.getTaskById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        task.setStatus(TaskStatus.valueOf(status)); // Mengupdate status task
+        taskService.save(task); // Menyimpan task yang sudah diupdate
+
+        return "redirect:/task"; // Kembali ke halaman daftar task
+    }
 }
