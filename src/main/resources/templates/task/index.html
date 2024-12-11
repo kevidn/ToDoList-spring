@@ -74,34 +74,23 @@
             <td class="px-4 py-2 text-sm">
               <form action="/task/update-status" method="post" class="inline-block">
                 <input type="hidden" name="taskId" th:value="${task.id}" />
-        
+            
                 <!-- Status Display -->
                 <div class="relative w-32">
-                    <!-- Displaying the current status as a button -->
-                    <button type="button"
-                            class="w-full text-sm py-2 px-4 border border-gray-300 rounded hover:bg-gray-50 focus:outline-none cursor-pointer"
-                            th:classappend="${task.status == 'NOT_STARTED' ? 'bg-red-500 text-white' : (task.status == 'IN_PROGRESS' ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white')}"
-                            onclick="this.nextElementSibling.classList.toggle('hidden');">
-                        <span th:text="${task.status}"></span>
-                    </button>
-        
-                    <!-- The hidden select dropdown -->
-                    <select name="status"
-                            class="absolute top-0 left-0 w-full hidden bg-white text-sm text-gray-700 py-2 px-4 border border-gray-300 rounded hover:bg-gray-50 focus:outline-none cursor-pointer"
-                            onchange="this.form.submit()">
-                        <option value="NOT_STARTED" th:selected="${task.status == 'NOT_STARTED'}">NOT_STARTED</option>
-                        <option value="IN_PROGRESS" th:selected="${task.status == 'IN_PROGRESS'}">IN_PROGRESS</option>
-                        <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}">COMPLETED</option>
-                    </select>
+                  <!-- Displaying the current status as a select dropdown -->
+                  <select name="status"
+                          class="w-full text-sm py-2 px-4 border border-gray-300 rounded cursor-pointer focus:outline-none"
+                          th:classappend="${task.status == 'NOT_STARTED' ? 'bg-red-500 text-white' : 
+                                           (task.status == 'IN_PROGRESS' ? 'bg-yellow-500 text-white' : 
+                                           'bg-green-500 text-white')}"
+                          onchange="this.form.submit()">  <!-- Trigger form submit on change -->
+                    <option value="NOT_STARTED" th:selected="${task.status == 'NOT_STARTED'}" class="bg-red-500:bg-red-600">NOT_STARTED</option>
+                    <option value="IN_PROGRESS" th:selected="${task.status == 'IN_PROGRESS'}" class="bg-yellow-500:bg-yellow-600">IN_PROGRESS</option>
+                    <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}" class="bg-green-500:bg-green-600">COMPLETED</option>
+                  </select>
                 </div>
-            </form>
-   
-</td>
-
-          
-            
-          
-            
+              </form>
+            </td>
             <td class="px-4 py-2 text-sm">
               <div class="flex gap-2">
                 <a
