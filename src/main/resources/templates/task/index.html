@@ -58,8 +58,6 @@
             <th class="px-4 py-2 text-left text-sm font-medium">ID</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Title</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Description</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Created At</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Updated At</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Deadline</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Status</th>
             <th class="px-4 py-2 text-left text-sm font-medium">Actions</th>
@@ -70,9 +68,16 @@
             <td class="px-4 py-2 text-sm" th:text="${task.id}"></td>
             <td class="px-4 py-2 text-sm" th:text="${task.title}"></td>
             <td class="px-4 py-2 text-sm" th:text="${task.description}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.createdAt}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.updatedAt}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.deadline}"></td>
+            <td class="px-4 py-2 text-sm">
+              <div class="flex flex-col">
+                <span th:text="${task.deadline}">-</span>
+                <span
+                  th:class="${task.remainingDaysClass}"
+                  th:text="${task.remainingDays}"
+                >
+                </span>
+              </div>
+            </td>
             <td class="px-4 py-2 text-sm">
               <form
                 action="/task/update-status"

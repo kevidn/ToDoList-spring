@@ -1,7 +1,9 @@
 package com.project.todolist.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +42,26 @@ public class TaskService {
             taskMap.put("createdAt", task.getCreatedAt() != null ? task.getCreatedAt().format(formatter) : "-");
             taskMap.put("updatedAt", task.getUpdatedAt() != null ? task.getUpdatedAt().format(formatter) : "-");
             taskMap.put("status", task.getStatus() != null ? task.getStatus().name() : "-");
+
+            LocalDate deadline = task.getDeadline();
+            LocalDate today = LocalDate.now();
+            long remainingDays = ChronoUnit.DAYS.between(today, deadline);
+
+            String remainingDaysText;
+            String remainingDaysClass;
+            if (remainingDays < 0) {
+                remainingDaysText = "Passed";
+                remainingDaysClass = "text-red-500"; // Red for passed deadlines
+            } else if (remainingDays == 0) {
+                remainingDaysText = "Today";
+                remainingDaysClass = "text-yellow-500"; // Yellow for today's deadline
+            } else {
+                remainingDaysText = remainingDays + " days left";
+                remainingDaysClass = "text-green-500"; // Green for more than 1 day left
+            }
+
+            taskMap.put("remainingDays", remainingDaysText);
+            taskMap.put("remainingDaysClass", remainingDaysClass);
             return taskMap;
         }).toList();
     }
