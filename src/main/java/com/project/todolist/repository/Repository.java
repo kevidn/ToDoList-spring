@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Sort;
 
 import com.project.todolist.models.Task;
+import com.project.todolist.models.User;
 
 public interface Repository extends JpaRepository<Task, Integer> {
 
@@ -15,5 +16,7 @@ public interface Repository extends JpaRepository<Task, Integer> {
     Task deleteById(Long id);
 
     List<Task> findAll(Sort sort);
+
+    List<Task> findByUser(User user);
 
 }

@@ -1,164 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ToDo List</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      .hidden {
-        display: none;
-      }
-
-      .relative {
-        position: relative;
-      }
-
-      .absolute {
-        position: absolute;
-      }
-
-      .z-10 {
-        z-index: 10;
-      }
+        .gradient-text-blue {
+            background: linear-gradient(to right, #e2e2e7, #c4d8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-green {
+            background: linear-gradient(to right, rgb(238, 238, 238), rgb(195, 255, 203));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
-  </head>
-  <body class="bg-gray-50 text-gray-800 font-sans">
-    <div class="container mx-auto p-6">
-      <h1 class="text-3xl font-semibold mb-6 flex items-center">
-        <img
-          class="ml-3"
-          width="50"
-          height="50"
-          src="https://img.icons8.com/ios-filled/50/task.png"
-          alt="task"
-        />
-        To-do list Website
-      </h1>
-
-      <a
-        href="/task/create"
-        class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 mb-4 inline-flex items-center"
-      >
-        Add New Task
-        <img
-          class="ml-2"
-          width="30"
-          height="30"
-          src="https://img.icons8.com/ios/50/FFFFFF/create-new.png"
-          alt="create-new"
-        />
-      </a>
-
-      <table
-        class="min-w-full bg-white border border-gray-200 rounded shadow-md"
-      >
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="px-4 py-2 text-left text-sm font-medium">ID</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Title</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Description</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Created At</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Updated At</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Deadline</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Status</th>
-            <th class="px-4 py-2 text-left text-sm font-medium">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="task : ${tasks}" class="border-b hover:bg-gray-50">
-            <td class="px-4 py-2 text-sm" th:text="${task.id}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.title}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.description}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.createdAt}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.updatedAt}"></td>
-            <td class="px-4 py-2 text-sm" th:text="${task.deadline}"></td>
-            <td class="px-4 py-2 text-sm">
-              <form
-                action="/task/update-status"
-                method="post"
-                class="inline-block"
-              >
-                <input type="hidden" name="taskId" th:value="${task.id}" />
-
-                <!-- Status Display -->
-                <div class="relative w-32">
-                  <!-- Displaying the current status as a select dropdown -->
-                  <select
-                    name="status"
-                    class="w-full text-sm py-2 px-4 border border-gray-300 rounded cursor-pointer focus:outline-none"
-                    th:classappend="${task.status == 'NOT_STARTED' ? 'bg-red-500 text-white' : 
-                                           (task.status == 'IN_PROGRESS' ? 'bg-yellow-500 text-white' : 
-                                           'bg-green-500 text-white')}"
-                    onchange="this.form.submit()"
-                  >
-                    <!-- Trigger form submit on change -->
-                    <option
-                      value="NOT_STARTED"
-                      th:selected="${task.status == 'NOT_STARTED'}"
-                      class="bg-red-500:bg-red-600"
-                    >
-                      NOT_STARTED
-                    </option>
-                    <option
-                      value="IN_PROGRESS"
-                      th:selected="${task.status == 'IN_PROGRESS'}"
-                      class="bg-yellow-500:bg-yellow-600"
-                    >
-                      IN_PROGRESS
-                    </option>
-                    <option
-                      value="COMPLETED"
-                      th:selected="${task.status == 'COMPLETED'}"
-                      class="bg-green-500:bg-green-600"
-                    >
-                      COMPLETED
-                    </option>
-                  </select>
-                </div>
-              </form>
-            </td>
-            <td class="px-4 py-2 text-sm">
-              <div class="flex gap-2">
-                <a
-                  th:href="@{'/task/' + ${task.id} + '/edit'}"
-                  class="bg-green-500 text-white py-1 px-3 rounded hover:bg-green-600 flex inline-flex items-center"
-                >
-                  Edit
-                  <img
-                    class="ml-3"
-                    width="15"
-                    height="15"
-                    src="https://img.icons8.com/ios-glyphs/30/FFFFFF/edit--v1.png"
-                    alt="edit--v1"
-                  />
-                </a>
-
-                <form
-                  th:action="@{'/task/' + ${task.id}}"
-                  method="POST"
-                  onclick="return window.confirm('Are you sure want to delete this task?');"
-                >
-                  <input type="hidden" name="_method" value="DELETE" />
-                  <button
-                    type="submit"
-                    class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex inline-flex items-center"
-                  >
-                    Delete
-                    <img
-                      class="ml-3"
-                      width="15"
-                      height="15"
-                      src="https://img.icons8.com/ios-filled/50/FFFFFF/delete.png"
-                      alt="delete"
-                    />
-                  </button>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="container mx-auto p-6 max-w-6xl">
+        <div class="flex justify-between items-center mb-6 bg-blue-600 text-white p-4 rounded-lg shadow-lg">
+            <h1 class="text-3xl font-semibold flex items-center gradient-text-blue">
+                <img class="ml-3" width="50" height="50" src="https://img.icons8.com/ios-filled/50/task.png" alt="task" />
+                To-do list Website
+            </h1>
+            <div>
+                <span class="text-lg font-medium gradient-text-blue">Selamat datang, <span th:text="${userName}"></span></span>
+                <form th:action="@{/logout}" method="post" class="inline">
+                    <button type="submit" class="ml-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Logout</button>
                 </form>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-4">
+          <a href="/task/create" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 inline-flex items-center">
+              <span class="gradient-text-green font-semibold">Add New Task</span>
+              <img class="ml-2" width="30" height="30" src="https://img.icons8.com/ios/50/FFFFFF/create-new.png" alt="create-new" />
+          </a>
+          <div class="flex items-center">
+              <span class="text-gray-500">"Organize your tasks efficiently"</span>
+          </div>
+        </div>
+
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+            <thead class="bg-gray-300">
+                <tr>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">ID</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Title</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Description</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Deadline</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${tasks}" class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2 text-sm text-gray-700" th:text="${task.id}"></td>
+                    <td class="px-4 py-2 text-sm text-gray-700" th:text="${task.title}"></td>
+                    <td class="px-4 py-2 text-sm text-gray-700" th:text="${task.description}"></td>
+                    <td class="px-4 py-2 text-sm text-gray-700">
+                        <div class="flex flex-col">
+                            <span th:text="${task.deadline}">-</span>
+                            <span th:class="${task.remainingDaysClass}" th:text="${task.remainingDays}"></span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-2 text-sm">
+                      <form
+                        action="/task/update-status"
+                        method="post"
+                        class="inline-block"
+                      >
+                        <input type="hidden" name="taskId" th:value="${task.id}" />
+        
+                        <!-- Status Display -->
+                        <div class="relative w-32">
+                          <!-- Displaying the current status as a select dropdown -->
+                          <select
+                            name="status"
+                            class="w-full text-sm py-2 px-4 border border-gray-300 rounded cursor-pointer focus:outline-none"
+                            th:classappend="${task.status == 'NOT_STARTED' ? 'bg-red-500 text-white' : 
+                                                   (task.status == 'IN_PROGRESS' ? 'bg-yellow-500 text-white' : 
+                                                   'bg-green-500 text-white')}"
+                            onchange="this.form.submit()"
+                          >
+                            <!-- Trigger form submit on change -->
+                            <option
+                              value="NOT_STARTED"
+                              th:selected="${task.status == 'NOT_STARTED'}"
+                              class="bg-red-500:bg-red-600"
+                            >
+                              NOT_STARTED
+                            </option>
+                            <option
+                              value="IN_PROGRESS"
+                              th:selected="${task.status == 'IN_PROGRESS'}"
+                              class="bg-yellow-500:bg-yellow-600"
+                            >
+                              IN_PROGRESS
+                            </option>
+                            <option
+                              value="COMPLETED"
+                              th:selected="${task.status == 'COMPLETED'}"
+                              class="bg-green-500:bg-green-600"
+                            >
+                              COMPLETED
+                            </option>
+                          </select>
+                        </div>
+                      </form>
+                    </td>
+                    <td class="px-4 py-2 text-sm text-gray-700">
+                        <div class="flex gap-2">
+                            <a th:href="@{'/task/' + ${task.id} + '/edit'}" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600 flex inline-flex items-center">
+                                Edit
+                                <img class="ml-3" width="15" height="15" src="https://img.icons8.com/ios-glyphs/30/FFFFFF/edit--v1.png" alt="edit--v1" />
+                            </a>
+                            <form th:action="@{'/task/' + ${task.id}}" method="POST" onclick="return window.confirm('Are you sure want to delete this task?');">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button type="submit" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 flex inline-flex items-center">
+                                    Delete
+                                    <img class="ml-3" width="15" height="15" src="https://img.icons8.com/ios-filled/50/FFFFFF/delete.png" alt="delete" />
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-  </body>
+</body>
 </html>
