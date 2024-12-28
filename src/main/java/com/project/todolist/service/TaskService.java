@@ -9,28 +9,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.project.todolist.models.Task;
+import com.project.todolist.models.User;
 import com.project.todolist.repository.Repository;
 
 @Service
 public class TaskService {
 
     private final Repository repository;
+    private final UserService userService;
 
-    public TaskService(Repository repository) {
+    public TaskService(Repository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     public List<Map<String, Object>> getAllTask() {
-        // Untuk mem-format tanggal
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        User currentUser = getCurrentUser();
+        List<Task> tasks = repository.findByUser(currentUser);
 
-        // Mengambil semua task dari repository
-        List<Task> tasks = repository.findAll();
-
-        // Mengubah setiap task menjadi Map dengan tanggal terformat
         return tasks.stream().map(task -> {
             Map<String, Object> taskMap = new HashMap<>();
             taskMap.put("id", task.getId());
@@ -51,13 +53,13 @@ public class TaskService {
             String remainingDaysClass;
             if (remainingDays < 0) {
                 remainingDaysText = "Passed";
-                remainingDaysClass = "text-red-500"; // Red for passed deadlines
+                remainingDaysClass = "text-red-500";
             } else if (remainingDays == 0) {
                 remainingDaysText = "Today";
-                remainingDaysClass = "text-yellow-500"; // Yellow for today's deadline
+                remainingDaysClass = "text-yellow-500";
             } else {
                 remainingDaysText = remainingDays + " days left";
-                remainingDaysClass = "text-green-500"; // Green for more than 1 day left
+                remainingDaysClass = "text-green-500";
             }
 
             taskMap.put("remainingDays", remainingDaysText);
@@ -67,21 +69,24 @@ public class TaskService {
     }
 
     public void save(Task task) {
-        repository.save(task); // Pastikan taskRepository digunakan untuk menyimpan task
+        task.setUser(getCurrentUser());
+        repository.save(task);
     }
 
     public Optional<Task> getTaskById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id).filter(task -> task.getUser().equals(getCurrentUser()));
     }
 
     public Task createAllTask(Task task) {
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
+        task.setUser(getCurrentUser());
         return repository.save(task);
     }
 
     public Task updateTask(Long id, Task updatedTask) {
-        Optional<Task> existingTaskOptional = repository.findById(id);
+        Optional<Task> existingTaskOptional = repository.findById(id)
+                .filter(task -> task.getUser().equals(getCurrentUser()));
 
         if (existingTaskOptional.isPresent()) {
             Task existingTask = existingTaskOptional.get();
@@ -99,7 +104,7 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
-        Optional<Task> task = repository.findById(id);
+        Optional<Task> task = repository.findById(id).filter(t -> t.getUser().equals(getCurrentUser()));
 
         if (task.isPresent()) {
             repository.delete(task.get());
@@ -108,4 +113,13 @@ public class TaskService {
         }
     }
 
+    private User getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = ((UserDetails) principal).getUsername();
+        return userService.findByEmail(email);
+    }
+
+    public User getUserByEmail(String email) {
+        return userService.findByEmail(email);
+    }
 }

@@ -1,5 +1,7 @@
 package com.project.todolist.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.project.todolist.models.Task;
 import com.project.todolist.models.Task.TaskStatus;
 import com.project.todolist.service.TaskService;
+import com.project.todolist.models.User;
 
 @Controller
 @RequestMapping("/task")
@@ -24,10 +27,10 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    // Method untuk menampilkan halaman
     @GetMapping
     public String getAllTasks(Model model) {
         model.addAttribute("tasks", taskService.getAllTask());
+        model.addAttribute("userName", getCurrentFullName());
         return "task/index";
     }
 
@@ -44,7 +47,6 @@ public class TaskController {
         return "task/edit";
     }
 
-    // Method untuk melakukan request
     @PostMapping("/create")
     public String createTask(@ModelAttribute Task task) {
         taskService.createAllTask(task);
@@ -72,5 +74,16 @@ public class TaskController {
         taskService.save(task); // Menyimpan task yang sudah diupdate
 
         return "redirect:/task"; // Kembali ke halaman daftar task
+    }
+
+    private String getCurrentFullName() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            User user = taskService.getUserByEmail(userDetails.getUsername());
+            return user.getFullName();
+        } else {
+            return principal.toString();
+        }
     }
 }
